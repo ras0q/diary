@@ -1,5 +1,6 @@
 import lume from "lume/mod.ts";
 import codeHighlight from "lume/plugins/code_highlight.ts";
+import extractDate from "lume/plugins/extract_date.ts";
 import feed from "lume/plugins/feed.ts";
 import jsonLd from "lume/plugins/json_ld.ts";
 import jsx from "lume/plugins/jsx.ts";
@@ -25,14 +26,9 @@ export const siteLocation = isProd
   ? new URL("https://blog.ras0q.com")
   : new URL("http://localhost:3000");
 
-const site = lume({
-  location: siteLocation,
-  watcher: {
-    ignore: [
-      // ogCachePath,
-    ],
-  },
-});
+const site = lume({ location: siteLocation });
+
+site.use(extractDate({ remove: false }));
 
 await Deno.mkdir("_cache", { recursive: true });
 const kv = await Deno.openKv(
@@ -42,7 +38,7 @@ site.addEventListener("afterBuild", () => {
   kv.close();
 });
 
-type OgInfo = Pick<OgObject, "ogTitle" | "ogDescription" | "ogImage" | "ogUrl">;
+type OgInfo = Pick<OgObject, "ogTitle" | "ogDescription" | "ogImage">;
 
 /**
  * Returns a root-relative image path when the original Markdown image URL points
@@ -127,12 +123,11 @@ const ogPlugin: PluggableList[number] = () => {
         if (error) {
           throw new Error(`Cannot extract OG info: ${match.url}`);
         }
-        const { ogTitle, ogDescription, ogImage, ogUrl } = result;
+        const { ogTitle, ogDescription, ogImage } = result;
         ogInfo = {
           ogTitle,
           ogDescription,
           ogImage,
-          ogUrl,
         };
         await kv.set(cacheKey, ogInfo);
       }
@@ -276,11 +271,9 @@ site.data(
             300,
           )
           : siteDescription),
-    image: ({ url }) => url + "index.png",
     icon: "/favicon.svg",
     twitter: "@ras0q",
     robots: true,
-    generator: true,
   } satisfies MetaData,
 );
 
@@ -333,10 +326,5 @@ site.copy("public/", "");
 site.copy("public/_headers", "_headers");
 site.copy("public/_redirects", "_redirects");
 site.copy("posts/public", "");
-
-site.parseBasename((basename) => ({
-  date: basename.match(/^\d{4}-\d{2}-\d{2}/)?.[0] ?? undefined,
-  basename,
-}));
 
 export default site;

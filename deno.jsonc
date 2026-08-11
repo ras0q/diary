@@ -28,7 +28,7 @@
     },
     "deploy": {
       "description": "Deploy the site to Cloudflare Workers",
-      "command": "deno run -A npm:wrangler deploy",
+      "command": "deno run -A wrangler deploy",
       "dependencies": [
         "build"
       ]
