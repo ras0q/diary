@@ -5,12 +5,12 @@
     "node_modules"
   ],
   "imports": {
-    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.4/",
-    "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.14/jsx-runtime.ts",
-    "open-graph-scraper": "npm:open-graph-scraper@6.11.0",
+    "lume/": "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.1/",
+    "lume/jsx-runtime": "https://cdn.jsdelivr.net/gh/oscarotero/ssx@0.1.15/jsx-runtime.ts",
+    "open-graph-scraper": "npm:open-graph-scraper@6.12.0",
     "rss-parser": "npm:rss-parser@3.13.0",
     "unist-util-visit": "npm:unist-util-visit@5.1.0",
-    "unocss": "npm:unocss@66.6.8",
+    "unocss": "npm:unocss@66.7.5",
     "wrangler": "npm:wrangler@4.85.0"
   },
   "tasks": {
@@ -32,6 +32,10 @@
       "dependencies": [
         "build"
       ]
+    },
+    "new": {
+      "description": "Create new content or code using artifacts",
+      "command": "deno task lume new"
     }
   },
   "compilerOptions": {
@@ -53,7 +57,7 @@
   },
   "lint": {
     "plugins": [
-      "https://cdn.jsdelivr.net/gh/lumeland/lume@3.2.4/lint.ts"
+      "https://cdn.jsdelivr.net/gh/lumeland/lume@3.3.1/lint.ts"
     ],
     "rules": {
       "exclude": [
