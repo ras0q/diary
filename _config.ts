@@ -10,6 +10,7 @@ import minifyHTML from "lume/plugins/minify_html.ts";
 import ogImages from "lume/plugins/og_images.ts";
 import pagefind from "lume/plugins/pagefind.ts";
 import remark from "lume/plugins/remark.ts";
+import redirects from "lume/plugins/redirects.ts";
 import sitemap from "lume/plugins/sitemap.ts";
 import unocss from "lume/plugins/unocss.ts";
 import unoConfig from "./uno.config.ts";
@@ -209,6 +210,21 @@ site
     }),
   );
 
+// Keep sitemap locations byte-for-byte aligned with encoded canonical URLs.
+site.process([".xml"], function encodeSitemapUrls(pages) {
+  const sitemapPage = pages.find((page) => page.data.url === "/sitemap.xml");
+  if (!sitemapPage) {
+    return;
+  }
+
+  sitemapPage.text = sitemapPage.text.replace(
+    /<loc>([\s\S]*?)<\/loc>/g,
+    (_match, url: string) => `<loc>${encodeURI(url.trim())}</loc>`,
+  );
+});
+
+site.use(redirects({ output: "netlify" }));
+
 // Optimization
 if (isProd) {
   site
@@ -315,7 +331,6 @@ site.data(
 );
 
 site.ignore("README.md");
-site.ignore("tmp");
 
 site.data("layout", "post.tsx", "/posts");
 site.data("openGraphLayout", "og.tsx", "/posts");

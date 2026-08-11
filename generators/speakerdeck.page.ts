@@ -17,6 +17,7 @@ export default async function* () {
         title: `[🔗Speaker Deck] ${item.title}`,
         url: `/external/speakerdeck${new URL(item.link!).pathname}/`,
         redirectURL: item.link!,
+        unlisted: true,
         tags: ["SpeakerDeck"],
         date: new Date(item.pubDate ?? ""),
         content: item.contentSnippet,

@@ -6,6 +6,10 @@ type Data = {
   title: string;
   type: string;
   query: string;
+  unlisted?: boolean;
+  metas?: {
+    robots: string;
+  };
 };
 
 export default function* ({ search }: Lume.Data) {
@@ -22,6 +26,10 @@ export default function* ({ search }: Lume.Data) {
       title: `#${tag}`,
       type: "tag",
       query: tag,
+      unlisted: true,
+      metas: {
+        robots: "noindex, follow",
+      },
     } satisfies Data;
   }
 }

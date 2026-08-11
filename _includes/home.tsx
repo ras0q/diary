@@ -50,13 +50,14 @@ export default (data: Lume.Data, helpers: Lume.Helpers) => {
         {data.search.pages<Post>(data.query, "date=desc")
           .map((data) => ({
             ...data,
-            isExternal: data.url.startsWith("/external"),
+            href: data.redirectURL ?? data.url,
+            isExternal: data.redirectURL !== undefined,
           }))
           .map((data) => (
             <article>
               <h2 class="text-2xl m-0">
                 <a
-                  href={data.url}
+                  href={data.href}
                   rel={data.isExternal ? "noopener" : undefined}
                   target={data.isExternal ? "_blank" : undefined}
                 >
